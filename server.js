@@ -8,24 +8,21 @@ const swaggerDocument = require('./swagger/swagger.json');
 dotenv.config();
 const app = express();
 
-// Middleware
 app.use(cors());
 app.use(express.json());
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
-// MongoDB connection
 mongoose
   .connect(process.env.MONGODB_URL, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => console.log('Connected to MongoDB'))
   .catch(err => console.error('Failed to connect to MongoDB', err));
 
-// Routes
+
 const ordersRoute = require('./routes/orders');
 const productsRoute = require('./routes/products');
 app.use('/api/orders', ordersRoute);
 app.use('/api/products', productsRoute);
 
-// Default route
 app.get('/', (req, res) => {
   res.send('API is running...');
 });

@@ -1,6 +1,5 @@
 const Order = require('../models/Orders');
 
-// GET all orders
 const getAllOrders = async (req, res) => {
   try {
     const orders = await Order.find();
@@ -10,7 +9,6 @@ const getAllOrders = async (req, res) => {
   }
 };
 
-// POST a new order
 const createOrder = async (req, res) => {
   const { customerName, items, totalAmount } = req.body;
 
@@ -27,7 +25,6 @@ const createOrder = async (req, res) => {
   }
 };
 
-// PUT to update an order
 const updateOrder = async (req, res) => {
   const { id } = req.params;
   const { status } = req.body;
@@ -47,7 +44,6 @@ const updateOrder = async (req, res) => {
   }
 };
 
-// DELETE an order
 const deleteOrder = async (req, res) => {
   const { id } = req.params;
 

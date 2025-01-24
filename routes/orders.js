@@ -2,7 +2,6 @@ const express = require('express');
 const router = express.Router();
 const Order = require('../models/Orders');
 
-// GET all orders
 router.get('/', async (req, res) => {
   try {
     const orders = await Order.find();
@@ -12,7 +11,6 @@ router.get('/', async (req, res) => {
   }
 });
 
-// POST a new order
 router.post('/', async (req, res) => {
   try {
     const { product, quantity, price } = req.body;
@@ -27,7 +25,6 @@ router.post('/', async (req, res) => {
   }
 });
 
-// PUT (update) an order
 router.put('/:id', async (req, res) => {
   try {
     const updatedOrder = await Order.findByIdAndUpdate(req.params.id, req.body, { new: true });
@@ -40,7 +37,6 @@ router.put('/:id', async (req, res) => {
   }
 });
 
-// DELETE an order
 router.delete('/:id', async (req, res) => {
   try {
     const deletedOrder = await Order.findByIdAndDelete(req.params.id);

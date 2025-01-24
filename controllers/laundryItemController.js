@@ -1,6 +1,5 @@
 const LaundryItem = require('../models/Product');
 
-// GET all laundry items
 const getAllLaundryItems = async (req, res) => {
   try {
     const items = await LaundryItem.find();
@@ -10,7 +9,6 @@ const getAllLaundryItems = async (req, res) => {
   }
 };
 
-// POST a new laundry item
 const createLaundryItem = async (req, res) => {
   const { name, pricePerUnit, category } = req.body;
 
@@ -27,7 +25,6 @@ const createLaundryItem = async (req, res) => {
   }
 };
 
-// PUT to update a laundry item
 const updateLaundryItem = async (req, res) => {
   const { id } = req.params;
   const { name, pricePerUnit, category } = req.body;
@@ -43,7 +40,6 @@ const updateLaundryItem = async (req, res) => {
   }
 };
 
-// DELETE a laundry item
 const deleteLaundryItem = async (req, res) => {
   const { id } = req.params;
 
