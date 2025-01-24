@@ -109,7 +109,7 @@
             }
           ],
           "responses": {
-            "201": { "description": "Order created successfully." },
+            "201": { "description": "order created successfully." },
             "400": { "description": "Invalid input." }
           }
         }
