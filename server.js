@@ -1,23 +1,35 @@
-require('dotenv').config(); // This loads the variables from the .env file
-
 const express = require('express');
 const mongoose = require('mongoose');
+const dotenv = require('dotenv');
+const cors = require('cors');
+const swaggerUi = require('swagger-ui-express');
+const swaggerDocument = require('./swagger/swagger.json');
 
-// Access the MongoDB URI from the environment variable
-const mongoURI = process.env.MONGODB_URL;
-
-if (!mongoURI) {
-  console.log('Error: MONGODB_URL is not defined in the .env file');
-  process.exit(1); // Exit the application if the environment variable is missing
-}
-
-mongoose.connect(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true })
-  .then(() => console.log('MongoDB connected successfully'))
-  .catch((err) => console.log(`Failed to connect to MongoDB: ${err.message}`));
-
+dotenv.config();
 const app = express();
-const PORT = process.env.PORT || 3000;
 
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+// Middleware
+app.use(cors());
+app.use(express.json());
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+
+// MongoDB connection
+mongoose
+  .connect(process.env.MONGODB_URL, { useNewUrlParser: true, useUnifiedTopology: true })
+  .then(() => console.log('Connected to MongoDB'))
+  .catch(err => console.error('Failed to connect to MongoDB', err));
+
+// Routes
+const ordersRoute = require('./routes/orders');
+const productsRoute = require('./routes/products');
+app.use('/api/orders', ordersRoute);
+app.use('/api/products', productsRoute);
+
+// Default route
+app.get('/', (req, res) => {
+  res.send('API is running...');
 });
+
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+

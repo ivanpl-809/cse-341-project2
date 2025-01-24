@@ -1,4 +1,4 @@
-const LaundryItem = require('../models/LaundryItem');
+const LaundryItem = require('../models/Product');
 
 // GET all laundry items
 const getAllLaundryItems = async (req, res) => {
