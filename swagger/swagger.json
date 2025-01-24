@@ -1,27 +1,63 @@
 {
-    "openapi": "3.0.0",
+    "swagger": "2.0",
     "info": {
-      "title": "Laundry API",
+      "title": "Order Management API",
+      "description": "API for managing orders",
       "version": "1.0.0"
     },
     "paths": {
+      "/api/orders": {
+        "post": {
+          "summary": "Create a new order",
+          "parameters": [
+            {
+              "name": "body",
+              "in": "body",
+              "description": "Order to be created",
+              "required": true,
+              "schema": {
+                "$ref": "#/definitions/Order"
+              }
+            }
+          ],
+          "responses": {
+            "201": {
+              "description": "Order created successfully"
+            }
+          }
+        }
+      },
       "/api/orders": {
         "get": {
           "summary": "Get all orders",
           "responses": {
             "200": {
-              "description": "A list of orders"
+              "description": "List of orders"
             }
           }
         }
-      },
-      "/api/laundry-items": {
-        "get": {
-          "summary": "Get all laundry items",
-          "responses": {
-            "200": {
-              "description": "A list of laundry items"
-            }
+      }
+    },
+    "definitions": {
+      "Order": {
+        "type": "object",
+        "properties": {
+          "customerName": {
+            "type": "string"
+          },
+          "itemName": {
+            "type": "string"
+          },
+          "quantity": {
+            "type": "number"
+          },
+          "status": {
+            "type": "string",
+            "enum": ["pending", "shipped", "delivered"]
+          },
+          "orderDate": {
+            "type": "string",
+            "format": "date-time"
           }
         }
       }
