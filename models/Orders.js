@@ -5,7 +5,6 @@ const orderSchema = new mongoose.Schema({
   quantity: { type: Number, required: true },
   price: { type: Number, required: true },
   status: { type: String, default: 'pending' },
-  createdAt: { type: Date, default: Date.now }
 });
 
 const Order = mongoose.model('Orders', orderSchema);
