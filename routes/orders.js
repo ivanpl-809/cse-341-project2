@@ -13,11 +13,12 @@ router.get('/', async (req, res) => {
 
 router.post('/', async (req, res) => {
   try {
-    const { product, quantity, price } = req.body;
-    if (!product || !quantity || !price) {
+    console.log(req.body);
+    const { product } = req.body;
+    if (!product) {
       return res.status(400).json({ message: 'All fields are required' });
     }
-    const newOrder = new Order({ product, quantity, price });
+    const newOrder = new Order({ product, quantity, totalPrice });
     const savedOrder = await newOrder.save();
     res.status(201).json(savedOrder);
   } catch (err) {
