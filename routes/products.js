@@ -25,11 +25,11 @@ router.get('/:id', async (req, res) => {
 
 router.post('/', async (req, res) => {
   try {
-    const { name, description, totalPrice, stock } = req.body;
-    if (!name || !totalPrice) {
-      return res.status(400).json({ message: 'Name and totalPrice are required' });
+    const { name, description, price, stock } = req.body;
+    if (!name || !price) {
+      return res.status(400).json({ message: 'Name and price are required' });
     }
-    const newProduct = new Product({ name, description, totalPrice, stock });
+    const newProduct = new Product({ name, description, price, stock });
     const savedProduct = await newProduct.save();
     res.status(201).json(savedProduct);
   } catch (err) {
