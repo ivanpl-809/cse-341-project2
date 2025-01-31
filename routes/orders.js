@@ -11,11 +11,22 @@ router.get('/', async (req, res) => {
   }
 });
 
+router.get('/:id', async (req, res) => {
+  try {
+    const order = await Order.findById(req.params.id);
+    if (!order) {
+      return res.status(404).json({ message: 'Order not found' });
+    }
+    res.status(200).json(order);
+  } catch (err) {
+    res.status(500).json({ message: 'Error fetching order', error: err });
+  }
+});
+
 router.post('/', async (req, res) => {
   try {
-    console.log(req.body);
-    const { product } = req.body;
-    if (!product) {
+    const { product, quantity, totalPrice } = req.body;
+    if (!product || !quantity || !totalPrice) {
       return res.status(400).json({ message: 'All fields are required' });
     }
     const newOrder = new Order({ product, quantity, totalPrice });

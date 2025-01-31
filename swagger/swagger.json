@@ -1,156 +1,219 @@
 {
-    "swagger": "2.0",
-    "info": {
-      "title": "Laundry Service API",
-      "version": "1.0.0",
-      "description": "API for managing products and orders in a laundry service."
-    },
-    "host": "cse-341-project2-zszp.onrender.com",
-    "basePath": "/",
-    "schemes": ["https"],
-    "paths": {
-      "/api/products": {
-        "get": {
-          "summary": "Get all products",
-          "description": "Returns a list of all products.",
-          "responses": {
-            "200": { "description": "OK" },
-            "500": { "description": "Internal Server Error" }
-          }
-        },
-        "post": {
-          "summary": "Create a new product",
-          "description": "Adds a new product to the database.",
-          "parameters": [
-            {
-              "in": "body",
-              "name": "body",
-              "required": true,
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "name": { "type": "string" },
-                  "description": { "type": "string" },
-                  "price": { "type": "number" },
-                  "stock": { "type": "number" }
-                }
-              }
-            }
-          ],
-          "responses": {
-            "201": { "description": "Product created successfully." },
-            "400": { "description": "Invalid input." }
-          }
-        }
-      },
-      "/api/products/{id}": {
-        "put": {
-          "summary": "Update a product",
-          "description": "Updates an existing product by ID.",
-          "parameters": [
-            { "in": "path", "name": "id", "required": true, "type": "string" },
-            {
-              "in": "body",
-              "name": "body",
-              "required": true,
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "name": { "type": "string" },
-                  "description": { "type": "string" },
-                  "price": { "type": "number" },
-                  "stock": { "type": "number" }
-                }
-              }
-            }
-          ],
-          "responses": {
-            "200": { "description": "Product updated successfully." },
-            "400": { "description": "Invalid ID or input." }
-          }
-        },
-        "delete": {
-          "summary": "Delete a product",
-          "description": "Deletes a product by ID.",
-          "parameters": [
-            { "in": "path", "name": "id", "required": true, "type": "string" }
-          ],
-          "responses": {
-            "200": { "description": "Product deleted successfully." },
-            "400": { "description": "Invalid ID." }
-          }
-        }
-      },
-      "/api/orders": {
-        "get": {
-          "summary": "Get all orders",
-          "description": "Returns a list of all orders.",
-          "responses": {
-            "200": { "description": "OK" },
-            "500": { "description": "Internal Server Error" }
-          }
-        },
-        "post": {
-          "summary": "Create a new order",
-          "description": "Adds a new order to the database.",
-          "parameters": [
-            {
-              "in": "body",
-              "name": "body",
-              "required": true,
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "product": { "type": "string" },
-                  "quantity": { "type": "number" },
-                  "totalPrice": { "type": "number" }
-                }
-              }
-            }
-          ],
-          "responses": {
-            "201": { "description": "order created successfully." },
-            "400": { "description": "Invalid input." }
-          }
-        }
-      },
-      "/api/orders/{id}": {
-        "put": {
-          "summary": "Update an order",
-          "description": "Updates an existing order by ID.",
-          "parameters": [
-            { "in": "path", "name": "id", "required": true, "type": "string" },
-            {
-              "in": "body",
-              "name": "body",
-              "required": true,
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "product": { "type": "string" },
-                  "quantity": { "type": "number" },
-                  "totalPrice": { "type": "number" }
-                }
-              }
-            }
-          ],
-          "responses": {
-            "200": { "description": "Order updated successfully." },
-            "400": { "description": "Invalid ID or input." }
-          }
-        },
-        "delete": {
-          "summary": "Delete an order",
-          "description": "Deletes an order by ID.",
-          "parameters": [
-            { "in": "path", "name": "id", "required": true, "type": "string" }
-          ],
-          "responses": {
-            "200": { "description": "Order deleted successfully." },
-            "400": { "description": "Invalid ID." }
+  "swagger": "2.0",
+  "info": {
+    "title": "Laundry Service API",
+    "version": "1.0.0",
+    "description": "API for managing products and orders in a laundry service."
+  },
+  "host": "cse-341-project2-zszp.onrender.com",
+  "basePath": "/",
+  "schemes": ["https"],
+  "paths": {
+    "/auth/github": {
+      "get": {
+        "summary": "Initiate GitHub authentication",
+        "description": "Redirects user to GitHub for authentication",
+        "responses": {
+          "302": {
+            "description": "Redirects to GitHub"
           }
         }
       }
+    },
+    "/auth/github/callback": {
+      "get": {
+        "summary": "GitHub authentication callback",
+        "description": "Handles authentication response from GitHub",
+        "responses": {
+          "200": {
+            "description": "Successful login"
+          },
+          "401": {
+            "description": "Authentication failed"
+          }
+        }
+      }
+    },
+    "/logout": {
+      "get": {
+        "summary": "Logs out the user",
+        "responses": {
+          "200": {
+            "description": "User logged out successfully"
+          }
+        }
+      }
+    },
+    "/dashboard": {
+      "get": {
+        "summary": "Protected route",
+        "security": [{ "oauth2": [] }],
+        "responses": {
+          "200": {
+            "description": "Welcome message for authenticated users"
+          },
+          "401": {
+            "description": "Unauthorized access"
+          }
+        }
+      }
+    },
+    "/api/products": {
+      "get": {
+        "summary": "Get all products",
+        "description": "Returns a list of all products.",
+        "responses": {
+          "200": { "description": "OK" },
+          "500": { "description": "Internal Server Error" }
+        }
+      },
+      "post": {
+        "summary": "Create a new product",
+        "description": "Adds a new product to the database.",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "name": { "type": "string" },
+                "description": { "type": "string" },
+                "price": { "type": "number" },
+                "stock": { "type": "number" }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "201": { "description": "Product created successfully." },
+          "400": { "description": "Invalid input." }
+        }
+      }
+    },
+    "/api/products/{id}": {
+      "put": {
+        "summary": "Update a product",
+        "description": "Updates an existing product by ID.",
+        "parameters": [
+          { "in": "path", "name": "id", "required": true, "type": "string" },
+          {
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "name": { "type": "string" },
+                "description": { "type": "string" },
+                "price": { "type": "number" },
+                "stock": { "type": "number" }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": { "description": "Product updated successfully." },
+          "400": { "description": "Invalid ID or input." }
+        }
+      },
+      "delete": {
+        "summary": "Delete a product",
+        "description": "Deletes a product by ID.",
+        "parameters": [
+          { "in": "path", "name": "id", "required": true, "type": "string" }
+        ],
+        "responses": {
+          "200": { "description": "Product deleted successfully." },
+          "400": { "description": "Invalid ID." }
+        }
+      }
+    },
+    "/api/orders": {
+      "get": {
+        "summary": "Get all orders",
+        "description": "Returns a list of all orders.",
+        "responses": {
+          "200": { "description": "OK" },
+          "500": { "description": "Internal Server Error" }
+        }
+      },
+      "post": {
+        "summary": "Create a new order",
+        "description": "Adds a new order to the database.",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "product": { "type": "string" },
+                "quantity": { "type": "number" },
+                "totalPrice": { "type": "number" }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "201": { "description": "Order created successfully." },
+          "400": { "description": "Invalid input." }
+        }
+      }
+    },
+    "/api/orders/{id}": {
+      "put": {
+        "summary": "Update an order",
+        "description": "Updates an existing order by ID.",
+        "parameters": [
+          { "in": "path", "name": "id", "required": true, "type": "string" },
+          {
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "product": { "type": "string" },
+                "quantity": { "type": "number" },
+                "totalPrice": { "type": "number" }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": { "description": "Order updated successfully." },
+          "400": { "description": "Invalid ID or input." }
+        }
+      },
+      "delete": {
+        "summary": "Delete an order",
+        "description": "Deletes an order by ID.",
+        "parameters": [
+          { "in": "path", "name": "id", "required": true, "type": "string" }
+        ],
+        "responses": {
+          "200": { "description": "Order deleted successfully." },
+          "400": { "description": "Invalid ID." }
+        }
+      }
     }
-  }
-  
+  },
+  "securityDefinitions": {
+    "oauth2": {
+      "type": "oauth2",
+      "authorizationUrl": "https://github.com/login/oauth/authorize",
+      "flow": "implicit",
+      "scopes": {
+        "user": "Access user profile"
+      }
+    }
+  },
+  "security": [
+    {
+      "oauth2": ["user"]
+    }
+  ]
+}
