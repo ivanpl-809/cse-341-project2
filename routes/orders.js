@@ -1,7 +1,12 @@
 const express = require('express');
 const router = express.Router();
+const authMiddleware = require('../middleware/authMiddleware');
 const Order = require('../models/Orders');
 
+// Apply middleware to all routes in this file
+router.use(authMiddleware);
+
+// Get all orders
 router.get('/', async (req, res) => {
   try {
     const orders = await Order.find();
@@ -11,6 +16,7 @@ router.get('/', async (req, res) => {
   }
 });
 
+// Get a single order by ID
 router.get('/:id', async (req, res) => {
   try {
     const order = await Order.findById(req.params.id);
@@ -23,6 +29,7 @@ router.get('/:id', async (req, res) => {
   }
 });
 
+// Create a new order
 router.post('/', async (req, res) => {
   try {
     const { product, quantity, totalPrice } = req.body;
@@ -37,6 +44,7 @@ router.post('/', async (req, res) => {
   }
 });
 
+// Update an order by ID
 router.put('/:id', async (req, res) => {
   try {
     const updatedOrder = await Order.findByIdAndUpdate(req.params.id, req.body, { new: true });
@@ -49,6 +57,7 @@ router.put('/:id', async (req, res) => {
   }
 });
 
+// Delete an order by ID
 router.delete('/:id', async (req, res) => {
   try {
     const deletedOrder = await Order.findByIdAndDelete(req.params.id);

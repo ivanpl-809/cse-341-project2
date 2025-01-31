@@ -15,10 +15,18 @@ require("./config/passport");
 
 const app = express();
 
-app.use(session({ secret: "your-secret", resave: false, saveUninitialized: false }));
+// Session configuration
+app.use(session({
+  secret: process.env.SESSION_SECRET || 'default_secret',
+  resave: false,
+  saveUninitialized: true
+}));
+
+// Passport initialization
 app.use(passport.initialize());
 app.use(passport.session());
 
+// GitHub OAuth routes
 app.get(
   "/auth/github",
   passport.authenticate("github", { scope: ["user:email"] })
@@ -32,12 +40,19 @@ app.get(
   })
 );
 
+// Logout route
 app.get("/logout", (req, res) => {
   req.logout(() => {
-    res.redirect("/");
+    req.session.destroy((err) => {
+      if (err) {
+        console.error('Error destroying session:', err);
+      }
+      res.redirect("/");
+    });
   });
 });
 
+// Dashboard route (protected)
 app.get("/dashboard", (req, res) => {
   if (!req.isAuthenticated()) {
     return res.status(401).json({ message: "Unauthorized" });
@@ -48,16 +63,11 @@ app.get("/dashboard", (req, res) => {
 // Middlewares
 app.use(cors());
 app.use(express.json());
-app.use(session({
-  secret: process.env.SESSION_SECRET || 'default_secret',
-  resave: false,
-  saveUninitialized: true
-}));
 
 // Swagger Docs
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
-//async/await
+// MongoDB connection
 async function connectDB() {
   try {
     await mongoose.connect(process.env.MONGODB_URL, {
@@ -67,19 +77,20 @@ async function connectDB() {
     console.log('Connected to MongoDB');
   } catch (err) {
     console.error('Failed to connect to MongoDB', err);
-    process.exit(1); 
+    process.exit(1);
   }
 }
 connectDB();
 
-// Rutes
+// Routes
 app.use('/api/orders', ordersRoute);
 app.use('/api/products', productsRoute);
 
+// Home route
 app.get('/', (req, res) => {
   res.send('API is running...');
 });
 
-// Intialize server
+// Start server
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
