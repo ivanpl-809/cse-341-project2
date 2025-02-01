@@ -40,7 +40,6 @@ app.get(
   })
 );
 
-// Logout route
 app.get("/logout", (req, res) => {
   req.logout(() => {
     req.session.destroy((err) => {
