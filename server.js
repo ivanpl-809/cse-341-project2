@@ -36,7 +36,7 @@ app.get(
   "/auth/github/callback",
   passport.authenticate("github", {
     failureRedirect: "/login",
-    successRedirect: "/api-docs",
+    successRedirect: "/dashboard",
   })
 );
 
